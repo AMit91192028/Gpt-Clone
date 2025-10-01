@@ -94,19 +94,15 @@ function  initSocketServer(httpServer){
                 }
             })
 
-            const ltm = [
+                const ltm = [
                 {
-                    role: "user",
-                    parts: [ {
-                        text: `
-
-                        these are some previous messages from the chat, use them to generate a response
-
-                        ${memory.map(item => item.metadata.text).join("\n")}
-                        
-                        ` } ]
+                    role: "model",
+                    parts: [{
+                    text: `Here are some relevant past messages for context:\n${memory.map(item => item.metadata.text).join("\n")}`
+                    }]
                 }
-            ]
+                ]
+
 
             const response = await aiService.generateResponse([...ltm,...stm])
 
