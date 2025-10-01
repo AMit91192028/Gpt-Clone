@@ -10,7 +10,7 @@ const AppRoutes = () => {
   const [loading, setLoading] = useState(true);
 
   function isUser() {
-    return axios.get('http://localhost:3000/api/auth/check', { withCredentials: true })
+    return axios.get('https://gpt-clone-xv0t.onrender.com/api/auth/check', { withCredentials: true })
       .then(res => setUser(res.data.user))
       .catch(() => setUser(null))
       .finally(() => setLoading(false));
