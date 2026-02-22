@@ -1,5 +1,7 @@
 const chatModel = require('../models/chat.model');
 const messageModel = require('../models/message.model').messageModel
+
+
 async function createChat(req,res){
    
 const{title} = req.body;
@@ -14,7 +16,8 @@ res.status(201).json({
     chat:{
         _id:chat._id,
         title:chat.title,
-        lastActivity:chat.lastActivity
+        lastActivity:chat.lastActivity,
+        user:chat.user
     }
 })
 
