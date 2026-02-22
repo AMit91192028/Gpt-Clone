@@ -2,11 +2,11 @@ const {GoogleGenAI} = require('@google/genai')
 
 const ai = new GoogleGenAI({})
 
-async function generateResponse(prompt){
+async function generateResponse(content){
 
     const response = await ai.models.generateContent({
         model: "gemini-2.0-flash",
-        contents: prompt,
+        contents: content,
         config: {
             temperature: 0.7, // temp >0 and temp<1
             systemInstruction: `<system>

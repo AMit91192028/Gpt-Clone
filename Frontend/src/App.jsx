@@ -1,13 +1,15 @@
+import { useState } from 'react'
 
+import './App.css'
 import AppRoutes from './AppRoutes'
 
+function App() {
 
-const App = () => {
 
   return (
-    <div>
-      <AppRoutes/>
-    </div>
+    <>
+      <AppRoutes />
+    </>
   )
 }
 

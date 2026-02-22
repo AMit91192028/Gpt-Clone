@@ -1,66 +1,69 @@
-import React from 'react'
-import { useForm } from 'react-hook-form'
+import React, { useState } from 'react';
+import { Link,useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import '../styles/theme-forms.css'
 
-const Login = ({isUser}) => {
-  const { register, handleSubmit,reset, formState: { errors, isSubmitting } } = useForm()
 
-  const navigate = useNavigate();
-  const onSubmit = async(data) => {
-   console.log(data);
-    try{
-    const response = await axios.post('https://gpt-clone-xv0t.onrender.com/api/auth/login',data,
-      {
-        withCredentials:true
-    })
-    const message = response.data;
-    console.log(message);
-     await isUser();
-    reset();
-   
-    navigate('/')
-  }
-  catch(err){
-    console.log(err.message);
-  }
+const Login = () => {
+    const [ form, setForm ] = useState({ email: '', password: '' });
+    const [ submitting, setSubmitting ] = useState(false);
+    const navigate = useNavigate();
+    
 
-  }
+    function handleChange(e) {
+        const { name, value } = e.target;
+        setForm({ ...form, [name]: value });
+    }
 
-  return (
-    <div className="form-page">
-      <form className="auth-form" onSubmit={handleSubmit(onSubmit)} noValidate>
-        <h2 className="form-title">Welcome back</h2>
+    async function handleSubmit(e) {
+        e.preventDefault();
+        setSubmitting(true);
 
-        <label className="form-label" htmlFor="email">Email</label>
-        <input
-          id="email"
-          className="form-input"
-          placeholder="you@example.com"
-          type="email"
-          {...register('email', { required: 'Email is required', pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: 'Enter a valid email' } })}
-        />
-        {errors.email && <p className="form-error">{errors.email.message}</p>}
 
-        <label className="form-label" htmlFor="password">Password</label>
-        <input
-          id="password"
-          className="form-input"
-          placeholder="Enter your password"
-          type="password"
-          {...register('password', { required: 'Password is required', minLength: { value: 6, message: 'At least 6 characters' } })}
-        />
-        {errors.password && <p className="form-error">{errors.password.message}</p>}
+        console.log(form);
 
-        <button className="form-cta" type="submit" disabled={isSubmitting}>
-          {isSubmitting ? 'Signing in…' : 'Sign in'}
-        </button>
+        axios.post("https://gpt-clone-xv0t.onrender.com/api/auth/login", {
+            email: form.email,
+            password: form.password
+        },
+            {
+                withCredentials: true
+            }
+        ).then((res) => {
+            console.log(res);
+            navigate("/");
+        }).catch((err) => {
+            console.error(err);
+        }).finally(() => {
+            setSubmitting(false);
+        });
 
-        <p className="form-foot">Don't have an account? <a href="/register">Register</a></p>
-      </form>
-    </div>
-  )
-}
+    }
 
-export default Login
+    return (
+        <div className="center-min-h-screen">
+            <div className="auth-card" role="main" aria-labelledby="login-heading">
+                <header className="auth-header">
+                    <h1 id="login-heading">Sign in</h1>
+                    <p className="auth-sub">Welcome back. We've missed you.</p>
+                </header>
+                <form className="auth-form" onSubmit={handleSubmit} noValidate>
+                    <div className="field-group">
+                        <label htmlFor="login-email">Email</label>
+                        <input id="login-email" name="email" type="email" autoComplete="email" placeholder="you@example.com"  onChange={handleChange} required />
+                    </div>
+                    <div className="field-group">
+                        <label htmlFor="login-password">Password</label>
+                        <input id="login-password" name="password" type="password" autoComplete="current-password" placeholder="Your password"  onChange={handleChange} required />
+                    </div>
+                    <button type="submit" className="primary-btn" disabled={submitting}>
+                        {submitting ? 'Signing in...' : 'Sign in'}
+                    </button>
+                </form>
+                <p className="auth-alt">Need an account? <Link to="/register">Create one</Link></p>
+            </div>
+        </div>
+    );
+};
+
+export default Login;
+

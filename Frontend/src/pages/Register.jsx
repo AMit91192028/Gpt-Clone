@@ -1,52 +1,85 @@
-import React from 'react'
-import { useForm } from 'react-hook-form'
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import '../styles/theme-forms.css'
 
 const Register = () => {
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm()
-  const onSubmit = async(data) => {
-    // placeholder submit handler
-    const info = {
-      fullName:{
-        firstName:data.firstname,
-        lastName:data.lastname
-      },
-      email:data.email,
-      password:data.password
+    const [ form, setForm ] = useState({ email: '', firstname: '', lastname: '', password: '' });
+    const [ submitting, setSubmitting ] = useState(false);
+    const navigate = useNavigate();
+
+
+    function handleChange(e) {
+        const { name, value } = e.target;
+        setForm(f => ({ ...f, [ name ]: value }));
     }
-   const response = await axios.post('https://gpt-clone-xv0t.onrender.com/api/auth/register',info,{withCredentials:true})
-    const message = response.data;
-    console.log(message);
-  }
 
-  return (
-    <div className="form-page">
-      <form className="auth-form" onSubmit={handleSubmit(onSubmit)} noValidate>
-        <h2 className="form-title">Create account</h2>
+    async function handleSubmit(e) {
+        e.preventDefault();
+        setSubmitting(true);
+        console.log(form);
 
-        <label className="form-label" htmlFor="firstname">First name</label>
-        <input id="firstname" className="form-input" placeholder="First name" {...register('firstname', { required: 'First name is required' })} />
-        {errors.firstname && <p className="form-error">{errors.firstname.message}</p>}
+        axios.post("https://gpt-clone-xv0t.onrender.com/api/auth/register", {
+            email: form.email,
+            fullName: {
+                firstName: form.firstname,
+                lastName: form.lastname
+            },
+            password: form.password
+        }, {
+            withCredentials: true
+        }).then((res) => {
+            console.log(res);
+            navigate("/");
+        }).catch((err) => {
+            console.error(err);
+            alert('Registration failed (placeholder)');
+        })
 
-        <label className="form-label" htmlFor="lastname">Last name</label>
-        <input id="lastname" className="form-input" placeholder="Last name" {...register('lastname', { required: 'Last name is required' })} />
-        {errors.lastname && <p className="form-error">{errors.lastname.message}</p>}
+        try {
+            // Placeholder: integrate real registration logic / API call.
 
-        <label className="form-label" htmlFor="email">Email</label>
-        <input id="email" className="form-input" type="email" placeholder="you@example.com" {...register('email', { required: 'Email is required', pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: 'Enter a valid email' } })} />
-        {errors.email && <p className="form-error">{errors.email.message}</p>}
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setSubmitting(false);
+        }
+    }
 
-        <label className="form-label" htmlFor="password">Password</label>
-        <input id="password" className="form-input" type="password" placeholder="Create a password" {...register('password', { required: 'Password is required', minLength: { value: 6, message: 'At least 6 characters' } })} />
-        {errors.password && <p className="form-error">{errors.password.message}</p>}
+    return (
+        <div className="center-min-h-screen">
+            <div className="auth-card" role="main" aria-labelledby="register-heading">
+                <header className="auth-header">
+                    <h1 id="register-heading">Create account</h1>
+                    <p className="auth-sub">Join us and start exploring.</p>
+                </header>
+                <form className="auth-form" onSubmit={handleSubmit} noValidate>
+                    <div className="field-group">
+                        <label htmlFor="email">Email</label>
+                        <input id="email" name="email" type="email" autoComplete="email" placeholder="you@example.com" value={form.email} onChange={handleChange} required />
+                    </div>
+                    <div className="grid-2">
+                        <div className="field-group">
+                            <label htmlFor="firstname">First name</label>
+                            <input id="firstname" name="firstname" placeholder="Jane" value={form.firstname} onChange={handleChange} required />
+                        </div>
+                        <div className="field-group">
+                            <label htmlFor="lastname">Last name</label>
+                            <input id="lastname" name="lastname" placeholder="Doe" value={form.lastname} onChange={handleChange} required />
+                        </div>
+                    </div>
+                    <div className="field-group">
+                        <label htmlFor="password">Password</label>
+                        <input id="password" name="password" type="password" autoComplete="new-password" placeholder="Create a password" value={form.password} onChange={handleChange} required minLength={6} />
+                    </div>
+                    <button type="submit" className="primary-btn" disabled={submitting}>
+                        {submitting ? 'Creating...' : 'Create Account'}
+                    </button>
+                </form>
+                <p className="auth-alt">Already have an account? <Link to="/login">Sign in</Link></p>
+            </div>
+        </div>
+    );
+};
 
-        <button className="form-cta" type="submit" disabled={isSubmitting}>{isSubmitting ? 'Creating…' : 'Create account'}</button>
+export default Register;
 
-        <p className="form-foot">Already have an account? <a href="/login">Sign in</a></p>
-      </form>
-    </div>
-  )
-}
-
-export default Register

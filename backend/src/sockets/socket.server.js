@@ -18,6 +18,7 @@ function  initSocketServer(httpServer){
    
  io.use(async(socket,next)=>{
     const cookies = cookie.parse(socket.handshake.headers?.cookie || "")// This is used to check cookie so that user can connect when they logged in
+    
     if(!cookies.token){
         next(new Error("Authentication error: No token provided"))
     }
