@@ -18,7 +18,9 @@ app.use(express.static(path.join(__dirname,'../public')))
 app.use('/api/auth',authRouter);
 app.use('/chat',chatRouter);
 
-
+app.get('*name',(req,res)=>{
+    res.sendFile(path.join(__dirname,'../public/index.html'))
+})
 
 
 module.exports= app
