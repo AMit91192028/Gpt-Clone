@@ -11,7 +11,7 @@ const Login = ({isUser}) => {
   const onSubmit = async(data) => {
    console.log(data);
     try{
-    const response = await axios.post('https://gpt-clone-xv0t.onrender.com/api/auth/login',data,
+    const response = await axios.post('https://mitra-ul4i.onrender.com/api/auth/login',data,
       {
         withCredentials:true
     })

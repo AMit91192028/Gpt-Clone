@@ -15,7 +15,7 @@ const Register = () => {
       email:data.email,
       password:data.password
     }
-   const response = await axios.post('https://gpt-clone-xv0t.onrender.com/api/auth/register',info,{withCredentials:true})
+   const response = await axios.post('https://mitra-ul4i.onrender.com/api/auth/register',info,{withCredentials:true})
     const message = response.data;
     console.log(message);
   }

@@ -27,7 +27,7 @@ const Home = () => {
  
   const getMessages = async(chatId)=>{
     dispatch(setActiveChatId(chatId))
-    const response =  await axios.get(`https://gpt-clone-xv0t.onrender.com/chat/messages/${chatId}`,{
+    const response =  await axios.get(`https://mitra-ul4i.onrender.com/chat/messages/${chatId}`,{
       withCredentials:true
      })
 
@@ -64,7 +64,7 @@ const Home = () => {
     console.log(title)
       if(!title) return;
       try{
-       const response = await axios.post("https://gpt-clone-xv0t.onrender.com/chat/",{title},{withCredentials:true})
+       const response = await axios.post("https://mitra-ul4i.onrender.com/chat/",{title},{withCredentials:true})
       //  console.log(response.data.chats);
       dispatch(createNewChat({title:response.data.chat.title,_id:response.data.chat._id}));
     }
@@ -74,14 +74,14 @@ const Home = () => {
   }
 
   useEffect(()=>{
-      axios.get("https://gpt-clone-xv0t.onrender.com/chat/",{withCredentials:true})
+      axios.get("https://mitra-ul4i.onrender.com/chat/",{withCredentials:true})
       .then(response=>{
         console.log(response.data.chats)
         dispatch(setChats(response.data.chats.reverse()));
       })
         
         
-        const tempSocket = io("https://gpt-clone-xv0t.onrender.com", {
+        const tempSocket = io("https://mitra-ul4i.onrender.com", {
           withCredentials: true
         })
 
